@@ -2,78 +2,117 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Проверка ИИН в Казахстане</title>
+    <title>IIN Checker</title>
     <style>
         body {
-            background-color: #f2f2f2;
-            font-family: sans-serif;
+            font-family: 'Helvetica Neue', sans-serif;
+            font-size: 14px;
+            color: #333333;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        #container {
+            width: 500px;
+            margin: 0 auto;
+            padding-top: 100px;
+        }
+
+        h1 {
             text-align: center;
         }
-        h1 {
-            margin-top: 50px;
-            margin-bottom: 20px;
-        }
+
         #iin-input {
-            display: block;
-            margin: 0 auto;
-            width: 300px;
+            width: 100%;
             height: 30px;
-            border: 1px solid #d9d9d9;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
             border-radius: 5px;
             padding: 5px;
-            font-size: 16px;
-            outline: none;
+            box-sizing: border-box;
         }
-        #check-button {
-            display: inline-block;
-            margin-top: 20px;
+
+        #submit-button {
             background-color: #007aff;
-            color: #fff;
+            color: #ffffff;
             border: none;
             border-radius: 5px;
-            padding: 10px 20px;
             font-size: 16px;
+            font-weight: bold;
+            padding: 10px;
+            margin-left: 10px;
             cursor: pointer;
+            text-align: center;
         }
-        #check-button:hover {
-            background-color: #006be0;
+
+        #submit-button:hover {
+            background-color: #0065c6;
+            text-align: center;
+        }
+
+        #result {
+            text-align: center;
+            font-size: 24px;
+            margin-top: 20px;
+        }
+
+        .valid {
+            color: green;
+        }
+
+        .invalid {
+            color: red;
         }
     </style>
 </head>
 <body>
-    <h1>Проверка ИИН в Казахстане</h1>
-    <input type="text" id="iin-input" placeholder="Введите ИИН">
-    <button id="check-button">Проверить</button>
-    <script>
-        function validate_iin(iin) {
-            if (iin.length !== 10) {
-                alert('Длина ИИН должна быть 10 символов');
-                return false;
-            }
-            if (!/^\d+$/.test(iin)) {
-                alert('ИИН может содержать только цифры');
-                return false;
-            }
-            var control_sum = (iin[0] * 1 + iin[1] * 2 + iin[2] * 3 + iin[3] * 4 + iin[4] * 5 + iin[5] * 6 + iin[6] * 7 + iin[7] * 8 + iin[8] * 9 + iin[9] * 10) % 11;
-            if (control_sum === 10) {
-                control_sum = (iin[0] * 3 + iin[1] * 4 + iin[2] * 5 + iin[3] * 6 + iin[4] * 7 + iin[5] * 8 + iin[6] * 9 + iin[7] * 10 + iin[8] * 11 + iin[9] * 1) % 11;
-            }
-            if (control_sum !== parseInt(iin[10])) {
-                alert('Контрольное число ИИН неверное');
-                return false;
-            }
-            return true;
-        }
+<div id="container">
+    <h1>IIN Checker</h1>
+    <form>
+        <input type="text" id="iin-input" placeholder="Введите ИИН">
+        <button type="button" id="submit-button">Проверить</button>
+    </form>
+    <div id="result"></div>
+</div>
 
-        document.getElementById('check-button').addEventListener('click', function() {
-            var iin = document.getElementById('iin-input').value;
-            if (validate_iin(iin)) {
-                alert('ИИН корректный');
+<script>
+    function validate_iin(iin) {
+        iin = iin.trim();
+        if (iin.length !== 12) {
+            return false;
+        }
+        if (!/^\d+$/.test(iin)) {
+            return false;
+        }
+        var control_sum = 0;
+        for (var i = 0; i < 11; i++) {
+            control_sum += (i + 1) * parseInt(iin[i]);
+        }
+        control_sum %= 11;
+        if (control_sum === 10) {
+            control_sum = 0;
+            for (var j = 0; j < 11; j++) {
+                control_sum += (j % 2 === 0 ? 3 : 4) * parseInt(iin[j]);
             }
-        });
-    </script>
-<br>
-<br>
-<br>
+            control_sum %= 10;
+        }
+        return control_sum === parseInt(iin[11]);
+    }
+
+    var submitButton = document.getElementById('submit-button');
+    submitButton.onclick = function() {
+        var iinInput = document.getElementById('iin-input');
+        var resultDiv = document.getElementById('result');
+        var iin = iinInput.value;
+        if (validate_iin(iin)) {
+            resultDiv.innerText = 'Корректный ИИН';
+            resultDiv.className = 'valid';
+        } else {
+            resultDiv.innerText = 'Некорректный ИИН';
+            resultDiv.className = 'invalid';
+        }
+    };
+</script>
 </body>
 </html>
