@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Проверка ИИН в Казахстане</title>
+    <style>
+        body {
+            background-color: #f2f2f2;
+            font-family: sans-serif;
+            text-align: center;
+        }
+        h1 {
+            margin-top: 50px;
+            margin-bottom: 20px;
+        }
+        #iin-input {
+            display: block;
+            margin: 0 auto;
+            width: 300px;
+            height: 30px;
+            border: 1px solid #d9d9d9;
+            border-radius: 5px;
+            padding: 5px;
+            font-size: 16px;
+            outline: none;
+        }
+        #check-button {
+            display: inline-block;
+            margin-top: 20px;
+            background-color: #007aff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #check-button:hover {
+            background-color: #006be0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Проверка ИИН в Казахстане</h1>
+    <input type="text" id="iin-input" placeholder="Введите ИИН">
+    <button id="check-button">Проверить</button>
+    <script>
+        function validate_iin(iin) {
+            if (iin.length !== 12) {
+                alert('Длина ИИН должна быть 12 символов');
+                return false;
+            }
+            if (!/^\d+$/.test(iin)) {
+                alert('ИИН может содержать только цифры');
+                return false;
+            }
+            var control_sum = (iin[0] * 1 + iin[1] * 2 + iin[2] * 3 + iin[3] * 4 + iin[4] * 5 + iin[5] * 6 + iin[6] * 7 + iin[7] * 8 + iin[8] * 9 + iin[9] * 10) % 11;
+            if (control_sum === 10) {
+                control_sum = (iin[0] * 3 + iin[1] * 4 + iin[2] * 5 + iin[3] * 6 + iin[4] * 7 + iin[5] * 8 + iin[6] * 9 + iin[7] * 10 + iin[8] * 11 + iin[9] * 1) % 11;
+            }
+            if (control_sum !== parseInt(iin[10])) {
+                alert('Контрольное число ИИН неверное');
+                return false;
+            }
+            return true;
+        }
+
+        document.getElementById('check-button').addEventListener('click', function() {
+            var iin = document.getElementById('iin-input').value;
+            if (validate_iin(iin)) {
+                alert('ИИН корректный');
+            }
+        });
+    </script>
+<br>
+<br>
+<br>
+</body>
+</html>
