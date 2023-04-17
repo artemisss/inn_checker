@@ -46,8 +46,8 @@
     <button id="check-button">Проверить</button>
     <script>
         function validate_iin(iin) {
-            if (iin.length !== 12) {
-                alert('Длина ИИН должна быть 12 символов');
+            if (iin.length !== 10) {
+                alert('Длина ИИН должна быть 10 символов');
                 return false;
             }
             if (!/^\d+$/.test(iin)) {
